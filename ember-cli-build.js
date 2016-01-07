@@ -42,14 +42,9 @@ function babelConfigFor(environment) {
   return { plugins: plugins };
 }
 
-function glimmerPackage(name, _options) {
-  var options = _options || {};
-
-  options.libPath = 'node_modules/glimmer-engine/dist/es6/';
-  options.ignoreMain = true;
-
-  return htmlbarsPackage(name, options);
-}
+var glimmerEngine = require('glimmer-engine/ember-cli-build')();
+var find = require('broccoli-stew').find;
+var log = require('broccoli-stew').log;
 
 module.exports = function() {
   var emberBuild = new EmberBuild({
@@ -75,16 +70,22 @@ module.exports = function() {
       'simple-html-tokenizer': htmlbarsPackage('simple-html-tokenizer'),
       'htmlbars-test-helpers': htmlbarsPackage('htmlbars-test-helpers', { singleFile: true }),
       'htmlbars-util':         htmlbarsPackage('htmlbars-util'),
-      'glimmer-compiler':      glimmerPackage('glimmer-compiler'),
-      'glimmer-object':        glimmerPackage('glimmer-object'),
-      'glimmer-reference':     glimmerPackage('glimmer-reference'),
-      'glimmer-runtime':       glimmerPackage('glimmer-runtime'),
-      'glimmer-syntax':        glimmerPackage('glimmer-syntax'),
-      'glimmer-test-helpers':  glimmerPackage('glimmer-test-helpers'),
-      'glimmer-util':          glimmerPackage('glimmer-util'),
-      'glimmer-wire-format':   glimmerPackage('glimmer-wire-format'),
-      'glimmer':               glimmerPackage('glimmer'),
-      'simple-html-tokenizer': glimmerPackage('simple-html-tokenizer')
+      'glimmer-engine':        find(glimmerEngine, {
+        include: [
+          'amd/glimmer-compiler.amd.js',
+          /*'amd/glimmer-runtime.amd.js', */
+          'amd/tests.amd.js'
+        ]
+      }),
+      // 'glimmer-compiler':      glimmerPackage('glimmer-compiler'),
+      // 'glimmer-object':        glimmerPackage('glimmer-object'),
+      // 'glimmer-reference':     glimmerPackage('glimmer-reference'),
+      // 'glimmer-runtime':       glimmerPackage('glimmer-runtime'),
+      // 'glimmer-syntax':        glimmerPackage('glimmer-syntax'),
+      // 'glimmer-test-helpers':  glimmerPackage('glimmer-test-helpers'),
+      // 'glimmer-util':          glimmerPackage('glimmer-util'),
+      // 'glimmer-wire-format':   glimmerPackage('glimmer-wire-format'),
+      // 'glimmer':               glimmerPackage('glimmer'),
     }
   });
 
